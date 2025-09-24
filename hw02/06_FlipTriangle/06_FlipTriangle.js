@@ -1,10 +1,3 @@
-/*-------------------------------------------------------------------------
-06_FlipTriangle.js
-
-1) Change the color of the triangle by keyboard input
-   : 'r' for red, 'g' for green, 'b' for blue
-2) Flip the triangle vertically by keyboard input 'f' 
----------------------------------------------------------------------------*/
 import { resizeAspectRatio, setupText, updateText } from '../util/util.js';
 import { Shader, readShaderFile } from '../util/shader.js';
 
@@ -30,7 +23,7 @@ function initWebGL() {
 
     // Initialize WebGL settings
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.1, 0.2, 0.3, 1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     
     return true;
 }
