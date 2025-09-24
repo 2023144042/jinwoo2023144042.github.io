@@ -13,7 +13,6 @@ const gl = canvas.getContext('webgl2');
 let shader;   // shader program
 let vao;      // vertex array object
 let colorTag = "red"; // triangle 초기 color는 red
-let verticalFlip = 1.0; // 1.0 for normal, -1.0 for vertical flip
 let offsetX = 0.0, offsetY = 0.0;
 const STEP = 0.01;
 
@@ -24,8 +23,8 @@ function initWebGL() {
         return false;
     }
 
-    canvas.width = 700;
-    canvas.height = 700;
+    canvas.width = 600;
+    canvas.height = 600;
 
     resizeAspectRatio(gl, canvas);
 
@@ -75,14 +74,10 @@ function setupKeyboardEvents() {
       moved = true;
     }
     break;
-
-   
-    default:
-      // 다른 키는 무시
-    break;
    }
 
   if (moved) {
+    shader.use();
     shader.setVec2('uOffset', offsetX, offsetY);
 
   }
@@ -113,12 +108,6 @@ function render() {
     let color;
     if (colorTag == "red") {
         color = [1.0, 0.0, 0.0, 1.0];
-    }
-    else if (colorTag == "green") {
-        color = [0.0, 1.0, 0.0, 1.0];
-    }
-    else if (colorTag == "blue") {
-        color = [0.0, 0.0, 1.0, 1.0];
     }
 
     shader.setVec4("uColor", color);
