@@ -1,5 +1,5 @@
-let rotationAngle = 0;
 let rotationAngle1 = 0;
+let rotationAngle2 = 0;
 let currentTransformType = null;
 let isAnimating = false;
 let lastTime = 0;
@@ -7,6 +7,7 @@ let elapsedTime=0;
 let M1=mat4.create();
 let M2=mat4.create();
 let M3=mat4.create();
+let M4=mat4.create();
 
 
 
@@ -54,28 +55,35 @@ gl.linkProgram(program);
 const vao=gl.createVertexArray();
 gl.bindVertexArray(vao);
 
-const vertices=new Float32Array([
+const verPillar=new Float32Array([
     -0.1,-1.0,
     -0.1,0.1,
     0.1,0.1,
     0.1,-1.0
 ]);
 
-const vertices2=new Float32Array([
+const verWingLarge1=new Float32Array([
     -0.5,-0.1,
     -0.5,0.1,
+    0,0.1,
+    0,-0.1
+]);
+
+const verWingLarge2=new Float32Array([
+    0,-0.1,
+    0,0.1,
     0.5,0.1,
     0.5,-0.1
 ]);
 
-const vertices3=new Float32Array([
+const verWingSmall1=new Float32Array([
     -0.6,-0.05,
     -0.6,0.05,
     -0.4,0.05,
     -0.4,-0.05
 ]);
 
-const vertices4=new Float32Array([
+const verWingSmall2=new Float32Array([
     0.6,-0.05,
     0.6,0.05,
     0.4,0.05,
@@ -89,29 +97,32 @@ const u_transform = mat4.create();
 const uTransformLoc = gl.getUniformLocation(program, 'u_transform');
 gl.uniformMatrix4fv(uTransformLoc, false, u_transform);
 
-const vbo=gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER,vbo);
-gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+const vboPillar=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,vboPillar);
+gl.bufferData(gl.ARRAY_BUFFER, verPillar, gl.STATIC_DRAW);
 
-const vbo1=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo1);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices2, gl.STATIC_DRAW);
+const vboWingLarge1=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingLarge1);
+    gl.bufferData(gl.ARRAY_BUFFER, verWingLarge1, gl.STATIC_DRAW);
 
-const vbo2=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo2);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices3, gl.STATIC_DRAW);
+const vboWingLarge2=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingLarge2);
+    gl.bufferData(gl.ARRAY_BUFFER, verWingLarge2, gl.STATIC_DRAW);
 
+const vboWingSmall1=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingSmall1);
+    gl.bufferData(gl.ARRAY_BUFFER, verWingSmall1, gl.STATIC_DRAW);
 
-const vbo3=gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER,vbo3);
-gl.bufferData(gl.ARRAY_BUFFER, vertices4, gl.STATIC_DRAW);
+const vboWingSmall2=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,vboWingSmall2);
+gl.bufferData(gl.ARRAY_BUFFER, verWingSmall2, gl.STATIC_DRAW);
 
 function render(){
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     const I = mat4.create(); // identity
     gl.uniformMatrix4fv(uTransformLoc, false, I);
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo);
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboPillar);
     gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(0);
     gl.uniform3f(uColorLoc,1.0,0.5,0.2);
@@ -119,45 +130,50 @@ function render(){
 
 
     mat4.identity(M1);
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo1);
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingLarge1);
     gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(0);
     gl.uniform3f(uColorLoc,0.0,0.5,0.0);
-    mat4.rotate(M1, M1, rotationAngle, [0, 0, 1]);
+    mat4.rotate(M1, M1, rotationAngle1, [0, 0, 1]);
     gl.uniformMatrix4fv(uTransformLoc, false, M1);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-
-    mat4.identity(M2);
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo2);
+    mat4.identity(M2);    
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingLarge2);
     gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(0);
-    gl.uniform3f(uColorLoc,1.0,1.0,1.0);
-    
-    
-    
-    mat4.rotate(M2, M2, rotationAngle, [0, 0, 1]);
-    mat4.translate(M2, M2, [-0.5, 0, 0]);
+    gl.uniform3f(uColorLoc,0.0,0.5,0.0);
     mat4.rotate(M2, M2, rotationAngle1, [0, 0, 1]);
-    mat4.translate(M2, M2, [0.5, 0, 0]);
-
     gl.uniformMatrix4fv(uTransformLoc, false, M2);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-
     mat4.identity(M3);
-    gl.bindBuffer(gl.ARRAY_BUFFER,vbo3);
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingSmall1);
     gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(0);
     gl.uniform3f(uColorLoc,1.0,1.0,1.0);
     
-    mat4.rotate(M3, M3, rotationAngle, [0, 0, 1]);
-    mat4.translate(M3, M3, [0.5, 0, 0]);
     mat4.rotate(M3, M3, rotationAngle1, [0, 0, 1]);
     mat4.translate(M3, M3, [-0.5, 0, 0]);
-    //행렬 곱하는 순서 주의....
+    mat4.rotate(M3, M3, rotationAngle2, [0, 0, 1]);
+    mat4.translate(M3, M3, [0.5, 0, 0]);
 
     gl.uniformMatrix4fv(uTransformLoc, false, M3);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+
+    mat4.identity(M4);
+    gl.bindBuffer(gl.ARRAY_BUFFER,vboWingSmall2);
+    gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+    gl.enableVertexAttribArray(0);
+    gl.uniform3f(uColorLoc,1.0,1.0,1.0);
+    
+    mat4.rotate(M4, M4, rotationAngle1, [0, 0, 1]);
+    mat4.translate(M4, M4, [0.5, 0, 0]);
+    mat4.rotate(M4, M4, rotationAngle2, [0, 0, 1]);
+    mat4.translate(M4, M4, [-0.5, 0, 0]);
+    //행렬 곱하는 순서 주의....
+
+    gl.uniformMatrix4fv(uTransformLoc, false, M4);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 }
 
@@ -170,8 +186,8 @@ function animate(currentTime) {
     lastTime = currentTime;
     elapsedTime += deltaTime;
 
-    rotationAngle  = Math.sin(elapsedTime) * Math.PI * 2.0;
-    rotationAngle1 = Math.sin(elapsedTime) * Math.PI * -10.0
+    rotationAngle1  = Math.sin(elapsedTime) * Math.PI * 2.0;
+    rotationAngle2 = Math.sin(elapsedTime) * Math.PI * -10.0
     
     render();
 
