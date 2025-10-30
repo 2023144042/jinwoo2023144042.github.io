@@ -8,7 +8,7 @@
 
 import { resizeAspectRatio, Axes } from '../util/util.js';
 import { Shader, readShaderFile } from '../util/shader.js';
-import { Cube } from '../util/squarePyramid.js';
+import { Cube } from './squarePyramid.js';
 import { Arcball } from '../util/arcball.js';
 import { loadTexture } from '../util/texture.js';
 const canvas = document.getElementById('glCanvas');
