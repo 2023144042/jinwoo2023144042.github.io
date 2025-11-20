@@ -81,7 +81,7 @@ VenusMesh.castShadow = true;
 
 VenusMesh.position.x=35;
 
-const yellowMaterial = new THREE.MeshStandardMaterial({
+const yellowMaterial = new THREE.MeshBasicMaterial({
   color: 0xffff00,
   roughness: 0.4,
   metalness: 0.0,
