@@ -20,11 +20,7 @@ scene.add(camera);
 let orbitControls = initOrbitControls(camera, renderer);
 const stats = initStats();
 
-const sunLight = new THREE.PointLight(0xffffff, 1000, 500);
-
-scene.add(sunLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(50, 20, 10);
 scene.add(directionalLight);
 
@@ -80,7 +76,7 @@ MercuryMesh.position.x=20;
 
 const Venus = new THREE.SphereGeometry(3, 20, 20)
 const VenusMesh = addGeometry(scene, Venus,
-                        textureLoader.load('./assets/textures/Venus.jpg'),'#e3931c');
+                        textureLoader.load('./assets/textures/Venus.jpg'),'#e39e1c');
 VenusMesh.castShadow = true;
 
 VenusMesh.position.x=35;
@@ -189,10 +185,10 @@ function render() {
   EarthMesh.rotation.y   += earthSettings["Rotation Speed"];
   MarsMesh.rotation.y    += marsSettings["Rotation Speed"];
 
-  mercuryAngle += mercurySettings["Oribit Speed"];
-  venusAngle   += venusSettings["Oribit Speed"];
-  earthAngle   += earthSettings["Oribit Speed"];
-  marsAngle    += marsSettings["Oribit Speed"];
+  mercuryAngle -= mercurySettings["Oribit Speed"];
+  venusAngle   -= venusSettings["Oribit Speed"];
+  earthAngle   -= earthSettings["Oribit Speed"];
+  marsAngle    -= marsSettings["Oribit Speed"];
 
   MercuryMesh.position.set(
     Math.cos(mercuryAngle) * mercuryRadius,
